@@ -5,16 +5,17 @@ const swaggerUi = require('swagger-ui-express');
 const router = require('./routes/routes');
 const cors = require('cors');
 const { cryptoPrice } = require('./utils/utils');
+const swaggerDocument = require('./swagger-output.json');
+require('dotenv').config();
+const port = process.env.PORT;
 const app = express();
-const port = 3000;
-const swaggerDocument = require('./swagger.json');
-
 app.set('port', port);
 
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use('/api/', cors(), require('./routes/routes'));
+router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/', require('./routes/routes'));
 
 app.use((_req, res, next) => {
   res.header();
@@ -25,8 +26,7 @@ app.use((_req, res, next) => {
 
 app.use(
   cors({
-    //origin: (_origin, callback) => callback(null, true),
-    origin: "http://localhost:3000",
+    origin: (_origin, callback) => callback(null, true),
     methods: "GET, POST",
     credentials: true
   })
@@ -46,8 +46,6 @@ app.use('*', (_req, res, next) => {
 app.use((error, _req, res, _next) => {
   return res.status(error.status || 500).json(error.message || 'Error no esperado');
 });
-
-router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(app.get('port'), () => {
   console.log(`Example app listening on port ${port}`);
