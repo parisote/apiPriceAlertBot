@@ -18,9 +18,9 @@ router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/', require('./routes/routes'));
 
 app.use((_req, res, next) => {
-  res.header();
-  res.header();
-  res.header();
+  res.header('Access-Control-Allow-Methods', 'GET,POST');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
