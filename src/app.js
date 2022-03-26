@@ -14,7 +14,7 @@ app.set('port', port);
 app.use(morgan('dev'));
 app.use(express.json());
 
-router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/', require('./routes/routes'));
 
 app.use((_req, res, next) => {
@@ -24,9 +24,18 @@ app.use((_req, res, next) => {
   next();
 });
 
+var allowedOrigins = ['http://localhost:3000'];
+//(_origin, callback) => callback(null, true),
 app.use(
   cors({
-    origin: (_origin, callback) => callback(null, true),
+    origin: function(origin, callback){
+      if(!origin) return callback(null, true);
+      if(allowedOrigins.indexOf(origin) === -1){
+        var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
     methods: "GET, POST",
     credentials: true
   })
