@@ -4,7 +4,7 @@ const { mongoose } = require('./database');
 const swaggerUi = require('swagger-ui-express');
 const router = require('./routes/routes');
 const cors = require('cors');
-const { cryptoPrice } = require('./utils/utils');
+const { setError, cryptoPrice } = require('./utils/utils');
 const swaggerDocument = require('./swagger-output.json');
 require('dotenv').config();
 const port = process.env.PORT;
@@ -32,15 +32,12 @@ app.use(
   })
 );
 
-app.use(express.json({limit: '1mb'}));
+app.use(express.json({limit: '500kb'}));
 
-app.use(express.urlencoded({limit: '1mb', extended: true}));
+app.use(express.urlencoded({limit: '500kb', extended: true}));
 
 app.use('*', (_req, res, next) => {
-  const error = new Error();
-  error.status = 404;
-  error.message = "Pag no encontrada";
-  return next(error);
+  return next(setError(404,'Route not found'));
 });
 
 app.use((error, _req, res, _next) => {

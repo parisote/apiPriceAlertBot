@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const error = (code, message) => {
+const setError = (code, message) => {
     const error = new Error();
     error.code = code;
     error.message = message;
@@ -17,4 +17,4 @@ const cryptoPrice = function ()
     })
 }
 
-module.exports = { error, cryptoPrice };
+module.exports = { setError, cryptoPrice };
