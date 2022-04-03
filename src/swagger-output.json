@@ -26,10 +26,13 @@
             "schema": {
               "type": "object",
               "properties": {
-                "title": {
+                "coin": {
                   "example": "any"
                 },
                 "price": {
+                  "example": "any"
+                },
+                "who": {
                   "example": "any"
                 }
               }
